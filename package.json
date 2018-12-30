@@ -1,0 +1,48 @@
+{
+  "name": "react-token-search",
+  "version": "1.0.0",
+  "description": "Search input component built in React",
+  "main": "dist/index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.4",
+    "gh-pages": "^2.0.1",
+    "html-webpack-plugin": "^3.2.0",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "webpack": "^4.28.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.14"
+  },
+  "peerDependencies": {
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0"
+  },
+  "scripts": {
+    "dev": "webpack-dev-server --mode development",
+    "transpile": "babel src -d dist --copy-files",
+    "prepublishOnly": "npm run transpile",
+    "build": "webpack --mode production",
+    "deploy": "gh-pages -d examples/dist",
+    "publish-demo": "npm run build && npm run deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pughpugh/react-token-search.git"
+  },
+  "keywords": [
+    "React",
+    "Search",
+    "Input"
+  ],
+  "author": "Hugh Gallagher <hugh@hcgallagher.co.uk>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pughpugh/react-token-search/issues"
+  },
+  "homepage": "https://github.com/pughpugh/react-token-search#readme"
+}
