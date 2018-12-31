@@ -7,7 +7,7 @@ A React html input component for building searches and displaying them as tokens
 
 ## Usage
 
-```
+```javascript
 <ReactTokenSearch onSearchChange={(tokens, searchString) => { ... } } />
 ```
 

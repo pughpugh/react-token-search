@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchToken from './react_token_search/search_token'
+import SearchToken from './react_token_search/search_token';
 
 const styles = {
   wrapper: {
@@ -15,7 +15,7 @@ const styles = {
     border: 'none',
     outlineWidth: 0
   }
-}
+};
 
 class ReactTokenSearch extends React.Component {
   constructor(props) {
@@ -23,6 +23,7 @@ class ReactTokenSearch extends React.Component {
 
     this.state = {
       inputValue: '',
+      focusedToken: undefined,
       tokens: []
     };
   }
@@ -30,7 +31,7 @@ class ReactTokenSearch extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if(prevState.tokens != this.state.tokens &&
        typeof(this.props.onSearchChange) == 'function') {
-      this.props.onSearchChange(this.state.tokens, this.tokensAsString())
+      this.props.onSearchChange(this.state.tokens, this.tokensAsString());
     }
   }
 
@@ -45,7 +46,7 @@ class ReactTokenSearch extends React.Component {
   }
 
   handleKeyDown(event) {
-    const token = event.target.value
+    const token = event.target.value;
 
     if(event.key == 'Enter' && token.length > 0) {
       this.addToken(token);
@@ -55,21 +56,36 @@ class ReactTokenSearch extends React.Component {
     }
   }
 
+  handleTokenFocus(tokenIndex) {
+    this.setState({ focusedToken: tokenIndex });
+  }
+
+  handleTokenBlur() {
+    this.setState({ focusedToken: undefined });
+  }
+
+  handleTokenKeyDown(e, tokenIndex) {
+    if(['Backspace', 'Delete'].includes(event.key)) {
+      e.target.blur();
+      this.removeToken(tokenIndex);
+    }
+  }
+
   addToken(token) {
     this.setState(prevState => {
       const tokens = prevState.tokens.concat({
         label: token
       });
 
-      return { tokens: tokens, inputValue: '' }
+      return { tokens: tokens, inputValue: '' };
     });
   }
 
   removeToken(tokenIndex) {
     this.setState(prevState => {
-      const tokens = prevState.tokens.filter((_, i) => i !== tokenIndex)
+      const tokens = prevState.tokens.filter((_, i) => i !== tokenIndex);
 
-      return { tokens: tokens }
+      return { tokens: tokens };
     });
   }
 
@@ -78,7 +94,12 @@ class ReactTokenSearch extends React.Component {
       <span style={styles.wrapper}>
         <span>
           { this.state.tokens.map((token, index) =>
-            <SearchToken label={token.label} key={index} />
+            <SearchToken {...token}
+                         selected={this.state.focusedToken == index}
+                         onKeyDown={(e) => this.handleTokenKeyDown(e, index) }
+                         onFocus={() => this.handleTokenFocus(index)}
+                         onBlur={this.handleTokenBlur.bind(this)}
+                         key={index} />
           )}
         </span>
         <input type='text'
