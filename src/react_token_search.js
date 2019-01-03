@@ -1,19 +1,29 @@
 import React from 'react';
 import SearchToken from './react_token_search/search_token';
+import AutocompleteMenu from './react_token_search/autocomplete_menu';
 
 const styles = {
   wrapper: {
+    display: 'inline-block'
+  },
+  search: {
     MozAppearance: 'textfield',
     WebkitAppearance: 'textfield',
     backgroundColor: '#FFF',
     border: '1px solid darkgray',
     boxShadow: '1px 1px 1px 0 lightgray inset',
     marginTop: 5,
-    padding: '2px 3px'
+    padding: '3px 4px 4px 4px',
+    width: 300,
+    verticalAlign: 'middle'
+  },
+  tokens: {
+    display: 'inline-block'
   },
   textInput: {
     border: 'none',
-    outlineWidth: 0
+    outlineWidth: 0,
+    width: 'auto'
   }
 };
 
@@ -24,7 +34,8 @@ class ReactTokenSearch extends React.Component {
     this.state = {
       inputValue: '',
       focusedToken: undefined,
-      tokens: []
+      tokens: [],
+      autocompleteTerms: []
     };
   }
 
@@ -39,10 +50,27 @@ class ReactTokenSearch extends React.Component {
     return this.state.tokens.map(token => token.label).join(' ');
   }
 
-  handleChange(event) {
-    this.setState({
-      inputValue: event.target.value
+  filterAutocompleteTerms() {
+    this.setState(prevState => {
+      if(prevState.inputValue.length > 0) {
+        const filtered = this.props.autocompleteTerms.filter((term) => {
+          const termName = term.alias || term.attribute
+          return termName.toLowerCase().includes(prevState.inputValue.toLowerCase())
+        });
+
+        return { autocompleteTerms: filtered };
+      } else {
+        return { autocompleteTerms: [] };
+      }
     });
+  }
+
+  handleChange(event) {
+    event.persist()
+
+    this.setState(() => {
+      return { inputValue: event.target.value }
+    }, this.filterAutocompleteTerms)
   }
 
   handleKeyDown(event) {
@@ -53,6 +81,9 @@ class ReactTokenSearch extends React.Component {
     }
     else if(['Backspace', 'Delete'].includes(event.key) && token.length == 0) {
       this.removeToken(this.state.tokens.length - 1);
+    }
+    else if(event.key == 'Down') {
+      this.selectNextAutocopleteTerm()
     }
   }
 
@@ -71,6 +102,14 @@ class ReactTokenSearch extends React.Component {
     }
   }
 
+  handleAutocompleteTermSelect(e, term) {
+    this.addToken(term.attribute);
+  }
+
+  selectNextAutocopleteTerm() {
+
+  }
+
   addToken(token) {
     this.setState(prevState => {
       const tokens = prevState.tokens.concat({
@@ -78,7 +117,7 @@ class ReactTokenSearch extends React.Component {
       });
 
       return { tokens: tokens, inputValue: '' };
-    });
+    }, this.filterAutocompleteTerms);
   }
 
   removeToken(tokenIndex) {
@@ -92,21 +131,27 @@ class ReactTokenSearch extends React.Component {
   render() {
     return (
       <span style={styles.wrapper}>
-        <span>
-          { this.state.tokens.map((token, index) =>
-            <SearchToken {...token}
-                         selected={this.state.focusedToken == index}
-                         onKeyDown={(e) => this.handleTokenKeyDown(e, index) }
-                         onFocus={() => this.handleTokenFocus(index)}
-                         onBlur={this.handleTokenBlur.bind(this)}
-                         key={index} />
-          )}
-        </span>
-        <input type='text'
-               value={this.state.inputValue}
-               onKeyDown={this.handleKeyDown.bind(this)}
-               onChange={this.handleChange.bind(this)}
-               style={styles.textInput} />
+        <div style={styles.search}>
+          <span style={styles.tokens}>
+            { this.state.tokens.map((token, index) =>
+              <SearchToken {...token}
+                           selected={this.state.focusedToken == index}
+                           onKeyDown={(e) => this.handleTokenKeyDown(e, index) }
+                           onFocus={() => this.handleTokenFocus(index)}
+                           onBlur={this.handleTokenBlur.bind(this)}
+                           key={index} />
+            )}
+          </span>
+          <input type='text'
+                 value={this.state.inputValue}
+                 onKeyDown={this.handleKeyDown.bind(this)}
+                 onChange={this.handleChange.bind(this)}
+                 style={styles.textInput} />
+        </div>
+        { this.state.autocompleteTerms &&
+          <AutocompleteMenu terms={this.state.autocompleteTerms}
+                            onTermSelect={this.handleAutocompleteTermSelect.bind(this)}/>
+        }
       </span>
     );
   }

@@ -1,7 +1,7 @@
 import React from "react";
 
 const styles = {
-  backgroundColor: 'blue',
+  backgroundColor: '#46A7D6',
   color: '#FFF',
   fontWeight: 'bold',
   padding: '2px 6px',
@@ -9,14 +9,13 @@ const styles = {
   marginRight: 4,
   borderRadius: 3,
   fontSize: 12,
-  font: 'sans-serif',
   userSelect: 'none',
   cursor: 'pointer'
 }
 
 function SearchToken(props) {
   const tokenStyles = () => {
-    return props.selected ? {...styles,...{ backgroundColor: 'red' }} : styles
+    return props.selected ? {...styles,...{ backgroundColor: '#2C83AD' }} : styles
   }
 
   return (
