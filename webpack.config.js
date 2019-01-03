@@ -12,7 +12,9 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, "examples/dist"),
-    filename: "bundle.js"
+    filename: "bundle.js",
+    libraryTarget: 'var',
+    library: 'ReactTokenSearch'
   },
   devtool: 'source-map',
   plugins: [htmlWebpackPlugin],
