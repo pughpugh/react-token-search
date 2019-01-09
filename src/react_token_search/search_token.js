@@ -5,8 +5,9 @@ const styles = {
   color: '#FFF',
   fontWeight: 'bold',
   padding: '2px 6px',
-  display: 'border-box',
-  marginRight: 4,
+  boxSizing: 'border-box',
+  display: 'inline-block',
+  margin: '0 0 4px 5px',
   borderRadius: 3,
   fontSize: 12,
   userSelect: 'none',
@@ -18,13 +19,17 @@ function SearchToken(props) {
     return props.selected ? {...styles,...{ backgroundColor: '#2C83AD' }} : styles
   }
 
+  const tokenLabel = () => {
+    return props.alias || props.attribute
+  }
+
   return (
     <span style={tokenStyles()}
           onKeyDown={props.onKeyDown}
           onFocus={props.onFocus}
           onBlur={props.onBlur}
           tabIndex={0}>
-      {props.label}
+      {tokenLabel()}
     </span>
   );
 }

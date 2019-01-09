@@ -6,16 +6,13 @@ const styles = {
     fontSize: 12,
     font: 'sans-serif',
     userSelect: 'none',
-    position: 'relative',
+    position: 'absolute',
     display: 'inline-block',
     borderLeft: '1px solid #CCC',
     borderRight: '1px solid #CCC',
-    width: '100%',
-    transition: 'all 0.3s ease',
-    maxHeight: 400,
     boxSizing: 'border-box',
-    overflowY: 'auto',
-    overflowX: 'hidden'
+    zIndex: 1000,
+    boxShadow: 'rgba(0,0,0,0.25) 0px 5px 15px'
   },
   term: {
     padding: 6,
@@ -33,12 +30,12 @@ function AutocompleteMenu(props) {
 
   return (
     <div style={styles.wrapper}>
-      { props.terms.map(term => {
+      { props.terms.map((term, index) => {
         return (
           <div style={styles.term}
                tabIndex={0}
                onClick={(e) => props.onTermSelect(e, term)}
-               key={term.attribute}>
+               key={index}>
             {termTitle(term)}
           </div>
         )
